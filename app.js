@@ -61,14 +61,34 @@ const checkLetter = (button) => {
 
 // listen for the onscreen keyboard to be clicked
 keyboard.addEventListener("click", (e) => {
-  if (e.target === "button") {
+  if (e.target.tagName === "BUTTON") {
     e.target.classList.add("chosen");
     e.target.setAttribute("disabled", true);
   }
   const letterFound = checkLetter(event.target.textContent);
   if (letterFound === null) {
-    let img = document.querySelectorAll("img");
-    img[missed].setAttribute("src", "images/lostHeart.png");
+    let heartLives = document.querySelectorAll("img");
+    heartLives[missed].setAttribute("src", "images/lostHeart.png");
     missed += 1;
   }
 });
+
+// Check if the game has been or  lost
+const checkWin = () => {
+  const letter = document.querySelectorAll(".letter");
+  const show = document.querySelectorAll(".show");
+  const title = document.querySelector(".title");
+  if (letter.length === show.length) {
+    setTimeout(() => {
+      overlay.classList.add("win");
+      title.textContent = "YOU WIN!";
+      overlay.style.display("flex");
+    }, 1500);
+  }
+  if (missed <= 5) {
+    overlay.classList.add("lose");
+    title.textContent = "YOU LOSE!";
+    overlay.style.display("flex");
+  }
+  reset();
+};
