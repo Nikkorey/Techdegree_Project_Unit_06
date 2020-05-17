@@ -1,10 +1,10 @@
-// variable
+// global variable
 const keyboard = document.getElementById("qwerty");
 const phrase = document.getElementById("phrase");
 const startButton = document.querySelector(".btn__reset");
 const overlay = document.getElementById("overlay");
 const tries = document.querySelectorAll(".tries");
-const missed = 0;
+let missed = 0;
 
 // Array of Phrase
 const arrayOfPhrases = [
@@ -47,22 +47,28 @@ addPhraseToDisplay(phraseArray);
 
 // check if a letter is in the phrase
 const checkLetter = (button) => {
-  const letter = document.querySelector(".letter");
-  const match = null;
+  let match = null;
+  const letter = document.querySelectorAll(".letter");
   for (let i = 0; i < letter.length; i += 1) {
     const letterButton = letter[i];
     if (button === letterButton.textContent.toLowerCase()) {
-      letterButton.classList.add = "show";
-      match = button.textContent;
+      letterButton.classList.add("show");
+      match = true;
     }
-    return match;
   }
+  return match;
 };
 
 // listen for the onscreen keyboard to be clicked
 keyboard.addEventListener("click", (e) => {
-  if (e.target.tagName === "BUTTON") {
-    const button = e.target.textContent;
-    const match = checkLetter(button);
+  if (e.target === "button") {
+    e.target.classList.add("chosen");
+    e.target.setAttribute("disabled", true);
+  }
+  const letterFound = checkLetter(event.target.textContent);
+  if (letterFound === null) {
+    let img = document.querySelectorAll("img");
+    img[missed].setAttribute("src", "images/lostHeart.png");
+    missed += 1;
   }
 });
