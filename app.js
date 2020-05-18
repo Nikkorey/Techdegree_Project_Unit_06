@@ -16,8 +16,12 @@ const arrayOfPhrases = [
 ];
 
 //  Listen for the start game button to be pressed
-startButton.addEventListener("click", () => {
-  overlay.style.display = "none";
+startButton.addEventListener("click", (e) => {
+  if (e.target.textContent === "Start Game") {
+    overlay.style.display = "none";
+  } else if (e.target.textContent === "Reset Game") {
+    location.reload();
+  }
 });
 
 // return a random phrase from an array
@@ -71,6 +75,7 @@ keyboard.addEventListener("click", (e) => {
     heartLives[missed].setAttribute("src", "images/lostHeart.png");
     missed += 1;
   }
+  checkWin(checkLetter);
 });
 
 // Check if the game has been or  lost
@@ -82,13 +87,17 @@ const checkWin = () => {
     setTimeout(() => {
       overlay.classList.add("win");
       title.textContent = "YOU WIN!";
-      overlay.style.display("flex");
-    }, 1500);
+      overlay.style.display = "flex";
+      startButton.textContent = "Reset Game";
+    }, 1000);
   }
-  if (missed <= 5) {
-    overlay.classList.add("lose");
-    title.textContent = "YOU LOSE!";
-    overlay.style.display("flex");
+  if (missed >= 5) {
+    setTimeout(() => {
+      overlay.classList.add("lose");
+      title.textContent = "YOU LOSE!";
+
+      overlay.style.display = "flex";
+      startButton.textContent = "Reset Game";
+    }, 300);
   }
-  reset();
 };
