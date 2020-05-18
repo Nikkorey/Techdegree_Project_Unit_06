@@ -8,17 +8,20 @@ let missed = 0;
 
 // Array of Phrase
 const arrayOfPhrases = [
-  "Once in a blue moon",
-  "The snow was freezing cold",
-  "The fancy cat walked to the fair",
-  "In the kitchen you will find my mom",
-  "The flag flying at half mast",
+  "Faith without action is dead",
+  "Pray without ceasing",
+  "I can do all things through Christ who strengthens me",
+  "Be joyful always",
+  "Love your enemy as you love yourself",
+  "With God all things are possible",
+  "Where God guides He provides",
 ];
 
 //  Listen for the start game button to be pressed
 startButton.addEventListener("click", (e) => {
   if (e.target.textContent === "Start Game") {
     overlay.style.display = "none";
+    reset();
   } else if (e.target.textContent === "Reset Game") {
     reset();
   }
@@ -83,10 +86,13 @@ const checkWin = () => {
   const letter = document.querySelectorAll(".letter");
   const show = document.querySelectorAll(".show");
   const title = document.querySelector(".title");
+  const subtitle = document.querySelector(".subtitle");
   if (letter.length === show.length) {
     setTimeout(() => {
+      overlay.classList.remove("lose");
       overlay.classList.add("win");
       title.textContent = "YOU WIN!";
+      subtitle.textContent = "You did a great job. Keep it up!";
       overlay.style.display = "flex";
       startButton.textContent = "Reset Game";
     }, 1000);
@@ -95,6 +101,7 @@ const checkWin = () => {
     setTimeout(() => {
       overlay.classList.add("lose");
       title.textContent = "You Lose. Try again?";
+      subtitle.textContent = "Keep on trying. Don't give up!";
       overlay.style.display = "flex";
       startButton.textContent = "Reset Game";
     }, 300);
@@ -113,8 +120,14 @@ const reset = () => {
   for (let i = 0; i < heartLives.length; i++) {
     heartLives[i].setAttribute("src", "images/liveHeart.png");
   }
-
   overlay.style.display = "none";
+
   const ul = document.querySelector("#phrase ul");
-  ul.removeChild();
+  const currentPhrase = ul.querySelectorAll("li");
+  currentPhrase.forEach((char) => ul.removeChild(char));
+
+  const phraseArray = getRandomPhraseAsArray(arrayOfPhrases);
+  addPhraseToDisplay(phraseArray);
+
+  missed = 0;
 };
