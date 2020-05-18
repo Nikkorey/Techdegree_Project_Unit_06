@@ -20,7 +20,7 @@ startButton.addEventListener("click", (e) => {
   if (e.target.textContent === "Start Game") {
     overlay.style.display = "none";
   } else if (e.target.textContent === "Reset Game") {
-    location.reload();
+    reset();
   }
 });
 
@@ -70,7 +70,7 @@ keyboard.addEventListener("click", (e) => {
     e.target.setAttribute("disabled", true);
   }
   const letterFound = checkLetter(event.target.textContent);
-  if (letterFound === null) {
+  if (letterFound === null && e.target.tagName === "BUTTON") {
     let heartLives = document.querySelectorAll("img");
     heartLives[missed].setAttribute("src", "images/lostHeart.png");
     missed += 1;
@@ -94,10 +94,27 @@ const checkWin = () => {
   if (missed >= 5) {
     setTimeout(() => {
       overlay.classList.add("lose");
-      title.textContent = "YOU LOSE!";
-
+      title.textContent = "You Lose. Try again?";
       overlay.style.display = "flex";
       startButton.textContent = "Reset Game";
     }, 300);
   }
+};
+
+// reset game
+const reset = () => {
+  let buttons = document.querySelectorAll("BUTTON");
+  for (let i = 0; i < buttons.length; i++) {
+    buttons[i].removeAttribute("disabled");
+    buttons[i].setAttribute("class", " ");
+  }
+
+  let heartLives = document.querySelectorAll("img");
+  for (let i = 0; i < heartLives.length; i++) {
+    heartLives[i].setAttribute("src", "images/liveHeart.png");
+  }
+
+  overlay.style.display = "none";
+  const ul = document.querySelector("#phrase ul");
+  ul.removeChild();
 };
