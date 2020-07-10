@@ -21,8 +21,7 @@ const arrayOfPhrases = [
 startButton.addEventListener("click", (e) => {
   if (e.target.textContent === "Start Game") {
     overlay.style.display = "none";
-    reset();
-  } else if (e.target.textContent === "Reset Game") {
+  } else {
     reset();
   }
 });
@@ -32,11 +31,10 @@ const getRandomPhraseAsArray = (arr) => {
   let randomNumber = Math.floor(Math.random() * arr.length);
   return arr[randomNumber];
 };
-getRandomPhraseAsArray(arrayOfPhrases);
 
 // adds the letters of a string to the display
 const addPhraseToDisplay = (arr) => {
-  for (let i = 0; i < arr.length; i += 1) {
+  for (let i = 0; i < arr.length; i++) {
     const ul = document.querySelector("#phrase ul");
     const listElement = document.createElement("li");
     const listItem = document.createTextNode(arr[i]);
@@ -49,6 +47,7 @@ const addPhraseToDisplay = (arr) => {
     }
   }
 };
+
 const phraseArray = getRandomPhraseAsArray(arrayOfPhrases);
 addPhraseToDisplay(phraseArray);
 
@@ -66,6 +65,39 @@ const checkLetter = (button) => {
   return match;
 };
 
+// Check if the game has been or  lost
+const checkWin = () => {
+  const letter = document.querySelectorAll(".letter");
+  const show = document.querySelectorAll(".show");
+  const title = document.querySelector(".title");
+
+  const subtitle = document.querySelector(".subtitle");
+  const desc = document.querySelector(".description");
+
+  if (letter.length === show.length) {
+    setTimeout(() => {
+      overlay.classList.remove("lose");
+      overlay.classList.add("win");
+      title.textContent = "YOU WIN!";
+      subtitle.textContent = "You did a great job. Keep it up!";
+      desc.style.display = "none";
+      overlay.style.display = "flex";
+      startButton.textContent = "Reset Game";
+    }, 1000);
+  }
+  if (missed >= 5) {
+    setTimeout(() => {
+      overlay.classList.add("lose");
+      title.textContent = "You Lose. Try again?";
+      subtitle.innerHTML = "Keep Going, Don't Give up.";
+      desc.style.display = "none";
+      // desc.innerHTML = `<strong>"${phraseArray}"</strong>`;
+      overlay.style.display = "flex";
+      startButton.textContent = "Reset Game";
+    }, 300);
+  }
+};
+
 // listen for the onscreen keyboard to be clicked
 keyboard.addEventListener("click", (e) => {
   if (e.target.tagName === "BUTTON") {
@@ -81,33 +113,6 @@ keyboard.addEventListener("click", (e) => {
   checkWin(checkLetter);
 });
 
-// Check if the game has been or  lost
-const checkWin = () => {
-  const letter = document.querySelectorAll(".letter");
-  const show = document.querySelectorAll(".show");
-  const title = document.querySelector(".title");
-  const subtitle = document.querySelector(".subtitle");
-  if (letter.length === show.length) {
-    setTimeout(() => {
-      overlay.classList.remove("lose");
-      overlay.classList.add("win");
-      title.textContent = "YOU WIN!";
-      subtitle.textContent = "You did a great job. Keep it up!";
-      overlay.style.display = "flex";
-      startButton.textContent = "Reset Game";
-    }, 1000);
-  }
-  if (missed >= 5) {
-    setTimeout(() => {
-      overlay.classList.add("lose");
-      title.textContent = "You Lose. Try again?";
-      subtitle.textContent = "Keep on trying. Don't give up!";
-      overlay.style.display = "flex";
-      startButton.textContent = "Reset Game";
-    }, 300);
-  }
-};
-
 // reset game
 const reset = () => {
   let buttons = document.querySelectorAll("BUTTON");
@@ -120,7 +125,6 @@ const reset = () => {
   for (let i = 0; i < heartLives.length; i++) {
     heartLives[i].setAttribute("src", "images/liveHeart.png");
   }
-  overlay.style.display = "none";
 
   const ul = document.querySelector("#phrase ul");
   const currentPhrase = ul.querySelectorAll("li");
@@ -130,4 +134,5 @@ const reset = () => {
   addPhraseToDisplay(phraseArray);
 
   missed = 0;
+  overlay.style.display = "none";
 };
